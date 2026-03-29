@@ -9,10 +9,17 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "reviews")
-
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Review extends BaseEntity {
 
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -20,9 +27,9 @@ public class Review extends BaseEntity {
 
     private int rating; // Calificación del 1 al 5
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
+    private Course course;*/
 
     @Enumerated (EnumType.STRING)
     @Column (length = 20)
