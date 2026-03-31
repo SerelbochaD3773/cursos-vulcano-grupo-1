@@ -22,4 +22,14 @@ public class ReviewService {
     public Review saveReview(Review review) {
         return reviewRepository.save(review);
     }
+
+    public Review updateReview(Long id, Review review) {
+        review.setId(id);
+        return reviewRepository.save(review);
+    }
+
+    public void deleteReview(Long id) {
+        reviewRepository.deleteById(id);
+    }
+
 }

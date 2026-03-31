@@ -1,6 +1,6 @@
 package com.grupo1.cursosvulcano.model.entity;
 
-import java.io.ObjectInputFilter.Status;
+import com.grupo1.cursosvulcano.model.enums.Status;
 
 import com.grupo1.cursosvulcano.model.enums.CourseLevel;
 
