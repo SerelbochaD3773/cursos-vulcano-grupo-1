@@ -20,7 +20,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Module extends BaseEntity {
      @Embedded
-     private Content contenido; 
+     private Content content; 
      private String videoUrl;
      private Integer durationInMinutes;    
      @Enumerated (EnumType.STRING)
