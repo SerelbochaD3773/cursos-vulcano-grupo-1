@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class ModuleService {
         @Autowired
@@ -14,8 +15,18 @@ public class ModuleService {
             return moduleRepository.findAll();
         } 
 
-        public Module createModule(Module module) {
+        public Module createModule( Module module) {
             return moduleRepository.save(module);
+        }
+
+        public Module updateModule(Long id, Module module) {   
+            module.setId(id);       
+            return moduleRepository.save(module);
+        }
+
+
+        public void deleteModule(Long id) {          
+            moduleRepository.deleteById(id);
         }
 
 }

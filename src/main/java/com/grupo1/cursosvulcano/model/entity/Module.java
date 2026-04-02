@@ -1,6 +1,6 @@
 package com.grupo1.cursosvulcano.model.entity;
 import com.grupo1.cursosvulcano.model.enums.Status;
-import com.grupo1.cursosvulcano.model.embeddable.Contenido;
+import com.grupo1.cursosvulcano.model.embeddable.Content;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Embedded;
@@ -20,7 +20,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Module extends BaseEntity {
      @Embedded
-     private Contenido contenido; 
+     private Content content; 
      private String videoUrl;
      private Integer durationInMinutes;    
      @Enumerated (EnumType.STRING)

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Embeddable
 @Getter
 @Setter
-public class Contenido {
+public class Content {
     private String name;
     private String description;
     private Integer orderIndex;
