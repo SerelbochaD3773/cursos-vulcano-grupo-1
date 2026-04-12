@@ -30,6 +30,9 @@ public class Course extends BaseEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
+     @Column(length = 500)
+    private String imageUrl;
+
     @Enumerated (EnumType.STRING)
     @Column (length = 20)
     private CourseLevel courseLevel;
