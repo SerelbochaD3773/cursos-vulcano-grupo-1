@@ -45,7 +45,7 @@ public class Course extends BaseEntity {
     @Enumerated (EnumType.STRING)
     private Status status;
 
-    @OneToMany(mappedBy = "curso", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Module> modulos = new ArrayList<>();
 
 }
