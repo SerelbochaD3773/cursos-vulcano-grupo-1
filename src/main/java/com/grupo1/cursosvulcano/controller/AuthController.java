@@ -20,24 +20,33 @@ public class AuthController {
 
     private final UserRepository userRepository;
 
+    // ----------------------------------------------------------
+    // POST /api/auth/login
+    // ----------------------------------------------------------
+    // Recibe: { "username": "...", "password": "..." }
+    // Devuelve:
+    //   200 OK  → el objeto User completo (incluyendo su rol y perfil)
+    //   401     → texto de error ("Usuario no encontrado" / "Contraseña incorrecta")
+    // ----------------------------------------------------------
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 
-        // Buscar el usuario por username
+        // Buscamos el usuario por username en la base de datos
         User user = userRepository.findByUsername(request.getUsername()).orElse(null);
 
-        // Si no existe el usuario
+        // Si no existe el usuario → respondemos con error 401
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no encontrado");
         }
 
-        // Verificar la contraseña (comparación simple, sin encriptación)
+        // Verificamos la contraseña (comparación directa, sin encriptación por ahora)
         if (!user.getPassword().equals(request.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta");
         }
 
-        // Si todo está bien, login exitoso
-        return ResponseEntity.ok("Login exitoso. Rol: " + user.getRole());
+        // ✅ Login exitoso: devolvemos el objeto User completo.
+        // Como agregamos el campo 'role' en la entidad User, ahora el frontend
+        // recibirá también si es ADMINISTRADOR o USUARIO.
+        return ResponseEntity.ok(user);
     }
 }
-

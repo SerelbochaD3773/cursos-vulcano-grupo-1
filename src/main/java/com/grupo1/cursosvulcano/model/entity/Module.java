@@ -1,11 +1,18 @@
 package com.grupo1.cursosvulcano.model.entity;
 import com.grupo1.cursosvulcano.model.enums.Status;
+
+import java.util.ArrayList;
+
 import com.grupo1.cursosvulcano.model.embeddable.Content;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -22,11 +29,14 @@ public class Module extends BaseEntity {
      @Embedded
      private Content content; 
      private String videoUrl;
-     private Integer durationInMinutes;    
+     private Integer durationInMinutes;
+     private String  markdownUrl;    
      @Enumerated (EnumType.STRING)
      @Column(length = 30)
      private Status status;
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id") 
+    private Course course;
 
 }
