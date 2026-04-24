@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Agent Instructions ###
+AGENTS.md
+.env

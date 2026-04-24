@@ -27,13 +27,21 @@ public class ModuleController {
     @GetMapping
     public List<Module> getAllModules() {
         return moduleService.getAllModules();   
-    
     }
 
-    @PostMapping
-    public Module createModule(@RequestBody Module module) {
-        return moduleService.createModule(module);
+    @GetMapping("/{id}")
+    public Module getModuleById(@PathVariable Long id) {
+        return moduleService.getModuleById(id);
+    }
 
+    @GetMapping("/course/{courseId}")
+    public List<Module> getModulesByCourseId(@PathVariable Long courseId) {
+        return moduleService.getModulesByCourseId(courseId);
+    }
+
+    @PostMapping("/course/{courseId}")
+    public Module createModule(@PathVariable Long courseId, @RequestBody Module module) {
+        return moduleService.createModule(module, courseId);
     }
 
     @PutMapping("/{id}")

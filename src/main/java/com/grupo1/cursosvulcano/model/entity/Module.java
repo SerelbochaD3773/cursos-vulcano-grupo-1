@@ -1,8 +1,6 @@
 package com.grupo1.cursosvulcano.model.entity;
 import com.grupo1.cursosvulcano.model.enums.Status;
 
-import java.util.ArrayList;
-
 import com.grupo1.cursosvulcano.model.embeddable.Content;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
@@ -12,7 +10,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -30,13 +27,15 @@ public class Module extends BaseEntity {
      private Content content; 
      private String videoUrl;
      private Integer durationInMinutes;
-     private String  markdownUrl;    
+     private String  markdownUrl; 
+     private String interactiveGameUrl;    
      @Enumerated (EnumType.STRING)
      @Column(length = 30)
      private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id") 
+    @JoinColumn(name = "course_id", nullable = false) 
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"modulos", "hibernateLazyInitializer", "handler"})
     private Course course;
 
 }
