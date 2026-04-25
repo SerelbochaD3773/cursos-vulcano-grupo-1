@@ -21,7 +21,7 @@ public class ModuleService {
         } 
 
         public List<Module> getModulesByCourseId(Long courseId) {
-            return moduleRepository.findByCourseIdOrderByOrderIndexAsc(courseId);
+            return moduleRepository.findByCourseIdOrderByContentOrderIndexAsc(courseId);
         }
 
         public Module getModuleById(Long id) {
