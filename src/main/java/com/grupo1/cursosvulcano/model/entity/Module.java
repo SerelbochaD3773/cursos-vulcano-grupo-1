@@ -28,7 +28,8 @@ public class Module extends BaseEntity {
      private String videoUrl;
      private Integer durationInMinutes;
      private String  markdownUrl; 
-     private String interactiveGameUrl;    
+     private String interactiveGameUrl;
+     private Integer orderIndex;
      @Enumerated (EnumType.STRING)
      @Column(length = 30)
      private Status status;
