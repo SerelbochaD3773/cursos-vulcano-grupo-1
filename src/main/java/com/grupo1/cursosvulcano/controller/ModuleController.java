@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 
 @RestController
 @RequestMapping("/api/modules")
-@CrossOrigin(origins = "*")
 public class ModuleController {
     @Autowired
     private ModuleService moduleService;

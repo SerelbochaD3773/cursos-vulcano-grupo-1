@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ModuleRepository extends JpaRepository<Module, Long> {
-    List<Module> findByCourseIdOrderByContentOrderIndexAsc(Long courseId);
+    List<Module> findByCourseIdOrderByOrderIndexAsc(Long courseId);
     Integer countByCourseId(Long courseId);
-    List<Module> findByCourseIdAndContentOrderIndexGreaterThanEqual(Long courseId, Integer orderIndex);
+    List<Module> findByCourseIdAndOrderIndexGreaterThanEqual(Long courseId, Integer orderIndex);
 }
