@@ -3,6 +3,7 @@ package com.grupo1.cursosvulcano.service;
 import java.util.List;
 import com.grupo1.cursosvulcano.model.entity.Course;
 import com.grupo1.cursosvulcano.repository.CourseRepository;
+import com.grupo1.cursosvulcano.repository.ModuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,9 @@ public class CourseService {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private ModuleRepository moduleRepository;
 
     public List<Course> getAllCourses() {
         return courseRepository.findAll();
@@ -31,10 +35,15 @@ public class CourseService {
     public Course updateCourse(Long id, Course course) {
         Course existingCourse = getCourseById(id);
         
-        // Regla de negocio: un curso no se puede hacer público si no tiene un módulo agregado
-        if (Boolean.TRUE.equals(course.getIsPublished()) && 
-            (existingCourse.getModulos() == null || existingCourse.getModulos().isEmpty())) {
-            throw new IllegalArgumentException("No se puede publicar un curso que no tiene módulos.");
+        // Regla de negocio: un curso no se puede hacer público si no tiene módulos.
+        // NOTA: usamos moduleRepository.countByCourseId() en lugar de existingCourse.getModulos()
+        // para evitar el problema de Lazy Loading donde la lista aparece vacía
+        // aunque el curso sí tenga módulos en la base de datos.
+        if (Boolean.TRUE.equals(course.getIsPublished())) {
+            Integer moduleCount = moduleRepository.countByCourseId(id);
+            if (moduleCount == null || moduleCount == 0) {
+                throw new IllegalArgumentException("No se puede publicar un curso que no tiene módulos.");
+            }
         }
         
         existingCourse.setName(course.getName());

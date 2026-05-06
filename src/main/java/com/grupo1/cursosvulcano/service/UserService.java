@@ -19,6 +19,14 @@ public class UserService {
 
     @Transactional
     public User createUser(User user, UserProfile profile) {
+        if (user.getUsername() == null || user.getUsername().isBlank()) {
+            throw new IllegalArgumentException("El username es obligatorio");
+        }
+
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("El username ya está en uso");
+        }
+
         // Usamos el método helper que creamos para vincular ambos objetos en memoria
         user.setProfile(profile);
         

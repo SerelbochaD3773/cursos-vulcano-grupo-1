@@ -34,14 +34,18 @@ public class UserController {
      * El JSON enviado debe tener una estructura anidada para el perfil.
      */
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        // Extraemos el perfil que viene dentro del objeto User
-        UserProfile profile = user.getProfile();
-        
-        // Llamamos al servicio que ya tiene la lógica del método helper y el cascade
-        User savedUser = userService.createUser(user, profile);
-        
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        try {
+            // Extraemos el perfil que viene dentro del objeto User
+            UserProfile profile = user.getProfile();
+            
+            // Llamamos al servicio que ya tiene la lógica del método helper y el cascade
+            User savedUser = userService.createUser(user, profile);
+            
+            return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 
     /**

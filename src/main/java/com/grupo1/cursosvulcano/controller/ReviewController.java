@@ -30,17 +30,22 @@ public class ReviewController {
         return reviewService.getAllReviews();
     }
 
+    @GetMapping("/{id}")
+    public Review getReviewById(@PathVariable Long id) {
+        return reviewService.getReviewById(id);
+    }
+
     @PostMapping
     public Review saveReview(@RequestBody Review review) {
         return reviewService.saveReview(review);
     }
     
-    @PutMapping
+    @PutMapping("/{id}")
     public Review updateReview(@PathVariable Long id, @RequestBody Review review) {
         return reviewService.updateReview(id, review);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public void deleteReview(@PathVariable Long id) {
         reviewService.deleteReview(id);
     }
