@@ -1,6 +1,7 @@
 package com.grupo1.cursosvulcano.model.entity;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,6 +24,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class User extends BaseEntity {
 
+    @Column(unique = true, nullable = false)
     private String username;
 
     private String password;
