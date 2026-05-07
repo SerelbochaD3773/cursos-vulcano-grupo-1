@@ -3,8 +3,11 @@ package com.grupo1.cursosvulcano.service;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.grupo1.cursosvulcano.model.entity.Course;
+import com.grupo1.cursosvulcano.model.entity.User;
+import com.grupo1.cursosvulcano.model.enums.UserRole;
 import com.grupo1.cursosvulcano.repository.CourseRepository;
 import com.grupo1.cursosvulcano.repository.ModuleRepository;
+import com.grupo1.cursosvulcano.repository.UserRepository;
 import com.grupo1.cursosvulcano.dto.request.CourseRequestDTO;
 import com.grupo1.cursosvulcano.dto.response.CourseResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,9 @@ public class CourseService {
     @Autowired
     private ModuleRepository moduleRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public List<CourseResponseDTO> getAllCourses() {
         return courseRepository.findAll().stream()
                 .map(this::mapToResponseDTO)
@@ -30,7 +36,21 @@ public class CourseService {
         return mapToResponseDTO(course);
     }
 
+    private void validateAdminRole(Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("El ID del usuario es obligatorio para esta acción.");
+        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado."));
+        
+        if (user.getRole() != UserRole.ADMIN) {
+            throw new SecurityException("¡Acceso Denegado! Solo los administradores pueden gestionar cursos.");
+        }
+    }
+
     public CourseResponseDTO createCourse(CourseRequestDTO request) {
+        validateAdminRole(request.getCreatorUserId());
+
         if (Boolean.TRUE.equals(request.getIsPublished())) {
             throw new IllegalArgumentException("No se puede publicar un curso que no tiene módulos.");
         }
@@ -48,6 +68,8 @@ public class CourseService {
     }
 
     public CourseResponseDTO updateCourse(Long id, CourseRequestDTO request) {
+        validateAdminRole(request.getCreatorUserId());
+
         Course existingCourse = courseRepository.findById(id).orElseThrow();
         
         if (Boolean.TRUE.equals(request.getIsPublished())) {
