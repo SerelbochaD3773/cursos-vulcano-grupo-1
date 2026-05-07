@@ -19,6 +19,7 @@ public class ModuleService {
 
     public List<Module> getAllModules() {
         return moduleRepository.findAll();
+    }
       
     public List<Module> getModulesByCourseId(Long courseId) {
         return moduleRepository.findByCourseIdOrderByOrderIndexAsc(courseId);
@@ -65,3 +66,4 @@ public class ModuleService {
     }
 
 }
+
