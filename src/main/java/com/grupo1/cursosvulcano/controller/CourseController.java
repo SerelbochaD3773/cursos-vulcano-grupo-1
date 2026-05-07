@@ -6,7 +6,6 @@ import com.grupo1.cursosvulcano.dto.response.CourseResponseDTO;
 import com.grupo1.cursosvulcano.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +18,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/courses")
-@CrossOrigin
 public class CourseController {
 
     @Autowired
