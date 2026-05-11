@@ -1,68 +1,154 @@
-# 🌋 cursos-vulcano-grupo-1
+# 🌋 Vulcano API — Backend (Grupo 1)
+
 **Plataforma de gamificación educativa para fortalecer la lógica de programación mediante desafíos interactivos.**
 
 ---
 
-## 📌 Introducción / Contexto
+## 📌 Descripción
 
-- **Descripción del problema:** Los estudiantes de desarrollo de software enfrentan dificultades para consolidar conocimientos teóricos de forma motivadora, existiendo una brecha significativa entre la teoría impartida y su aplicación práctica creativa.
-- **Justificación:** VULCANO API surge para promover la interacción y motivación mediante dinámicas lúdicas que reducen esa brecha, integrando el aprendizaje con experiencias gamificadas.
-- **Contexto:** Proyecto académico desarrollado para la Carrera Técnica en Desarrollo de Software.
+VULCANO API es el backend de la plataforma Vulcano, una aplicación educativa gamificada que permite a los estudiantes de desarrollo de software consolidar conocimientos teóricos mediante desafíos interactivos, gestión de cursos modulares y clases privadas con expertos.
 
----
-
-## 🎯 Objetivos
-
-**Objetivo General:** Desarrollar e implementar una plataforma web de gamificación académica que fortalezca el aprendizaje de contenidos teóricos mediante una arquitectura cliente–servidor, utilizando React y Java Spring Boot.
-
-**Objetivos Específicos:**
-
-- **OE1:** Diseñar actividades lúdicas grupales e individuales integradas en una interfaz web dinámica y responsiva.
-- **OE2:** Aplicar metodologías ágiles durante el desarrollo para garantizar la adaptación continua a los requerimientos.
-- **OE3:** Evaluar y ajustar continuamente el funcionamiento de la plataforma mediante pruebas funcionales y retroalimentación de usuarios.
-- **OE4:** Implementar funcionalidades interactivas para gestión de reseñas, desafíos académicos y ejecución de código en tiempo real con una API REST.
+**Arquitectura:** API REST desarrollada con Java Spring Boot que sirve datos al frontend React (vulcano-app-v2).
 
 ---
 
-## 📐 Alcance del Proyecto (Scope)
+## 🛠️ Tech Stack
 
-**Qué se va a desarrollar:**
-
-- Plataforma web interactiva construida con React, JavaScript y Tailwind CSS.
-- Arquitectura cliente–servidor con API REST desarrollada en Java Spring Boot y Spring Data JPA.
-- Gestión de datos con Spring Data JPA / Hibernate para modelado de usuarios, reseñas y desafíos.
-- Sistema CRUD académico completo para contenidos y retos.
-- Módulo de desafíos interactivos con editor de código en el navegador.
-- Sistema de autenticación y validación de usuarios.
-
-**Qué NO se va a desarrollar (Fuera de alcance):**
-
-- Entorno de ejecución de código en servidor con sandbox seguro.
-- Evaluación automática con inteligencia artificial.
-- Aplicación móvil nativa.
-- Despliegue en infraestructura de alta disponibilidad.
-
----
-
-## 🛠️ Tecnologías y Herramientas (Tech Stack)
-
-- **Backend:** Java 21, Spring Boot 3.4.2, Spring Data JPA, Maven.
-- **Frontend:** React, JavaScript (ES6+), Tailwind CSS.
-- **Base de Datos:** PostgreSQL para producción y H2 para desarrollo local.
-- **Otras herramientas:** Git, GitHub, Postman, VScode.
-
-**Dependencias obligatorias del proyecto (Backend):**
-
-| Dependencia | Versión | Descripción |
+| Tecnología | Versión | Descripción |
 | :--- | :--- | :--- |
-| `spring-boot-starter-web` | 3.4.2 | API REST con Spring MVC |
-| `spring-boot-starter-data-jpa` | 3.4.2 | ORM con Hibernate / Spring Data JPA |
-| `lombok` | managed | Reducción de boilerplate (getters, setters, constructores) |
-| `spring-boot-devtools` | 3.4.2 | Recarga automática en desarrollo |
-| `h2` | runtime | Base de datos en memoria para pruebas locales |
-| `postgresql` | runtime | Driver JDBC para PostgreSQL en producción |
+| **Java** | 21 | Lenguaje principal |
+| **Spring Boot** | 3.4.2 | Framework backend |
+| **Spring Data JPA** | 3.4.2 | ORM con Hibernate |
+| **Maven** | 3.9+ | Gestor de dependencias |
+| **Lombok** | managed | Reducción de boilerplate |
+| **PostgreSQL** | runtime | BD de producción |
+| **H2** | runtime | BD en memoria para desarrollo |
 
-> ⚠️ **Nota importante:** Este proyecto utiliza **Spring Data JPA** como ORM. Prisma es un ORM exclusivo del ecosistema Node.js y **no es compatible** con Spring Boot/Hibernate. Toda la gestión de datos se realiza a través de Spring Data JPA.
+---
+
+## 📋 Requisitos Previos
+
+- **Java JDK 21** o superior
+- **Maven 3.9+** (o usar el wrapper `./mvnw` incluido)
+- **PostgreSQL** (solo para producción)
+
+---
+
+## 🚀 Instalación y Ejecución
+
+### 1. Clonar el repositorio
+
+```bash
+git clone https://github.com/MarioMunera1993/vulcano-api-grupo-1.git
+cd vulcano-api-grupo-1
+```
+
+### 2. Ejecutar en modo desarrollo (H2 en memoria)
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+### 3. Ejecutar en modo producción (PostgreSQL)
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=prod
+```
+
+> El servidor arrancará en `http://localhost:8080`
+
+---
+
+## 🔑 Variables de Entorno
+
+| Variable | Descripción | Perfil |
+| :--- | :--- | :--- |
+| `DB_USERNAME` | Usuario de PostgreSQL | prod |
+| `DB_PASSWORD` | Contraseña de PostgreSQL | prod |
+| `SPRING_PROFILES_ACTIVE` | Perfil activo (`dev` / `prod`) | ambos |
+
+---
+
+## 📡 Endpoints Principales
+
+### Autenticación (`/api/auth`)
+
+| Método | Ruta | Descripción | Acceso |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/login` | Iniciar sesión | Público |
+
+### Usuarios (`/api/users`)
+
+| Método | Ruta | Descripción | Acceso |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/users` | Crear usuario + perfil | Público |
+| `GET` | `/api/users` | Listar todos los usuarios | Admin |
+| `GET` | `/api/users/{id}` | Obtener usuario por ID | Autenticado |
+| `PUT` | `/api/users/{id}` | Actualizar perfil | Autenticado |
+| `DELETE` | `/api/users/{id}` | Eliminar usuario | Admin |
+| `PATCH` | `/api/users/{id}/role` | Cambiar rol del usuario | Admin |
+| `POST` | `/api/users/{userId}/courses/{courseId}` | Inscribirse en un curso | Autenticado |
+
+### Cursos (`/api/courses`)
+
+| Método | Ruta | Descripción | Acceso |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/courses` | Listar todos los cursos | Público |
+| `GET` | `/api/courses/{id}` | Obtener curso por ID | Público |
+| `POST` | `/api/courses` | Crear curso | Admin |
+| `PUT` | `/api/courses/{id}` | Actualizar curso | Admin |
+| `DELETE` | `/api/courses/{id}` | Eliminar curso | Admin |
+
+### Módulos (`/api/modules`)
+
+| Método | Ruta | Descripción | Acceso |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/modules` | Listar todos los módulos | Público |
+| `GET` | `/api/modules/{id}` | Obtener módulo por ID | Público |
+| `GET` | `/api/modules/course/{courseId}` | Módulos de un curso | Público |
+| `POST` | `/api/modules/course/{courseId}` | Crear módulo | Admin (header `X-User-Id`) |
+| `PUT` | `/api/modules/{id}` | Actualizar módulo | Admin (header `X-User-Id`) |
+| `DELETE` | `/api/modules/{id}` | Eliminar módulo | Admin (header `X-User-Id`) |
+
+### Reseñas (`/api/reviews`)
+
+| Método | Ruta | Descripción | Acceso |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/reviews` | Listar todas las reseñas | Público |
+| `GET` | `/api/reviews/{id}` | Obtener reseña por ID | Público |
+| `POST` | `/api/reviews` | Crear reseña | Autenticado |
+| `PUT` | `/api/reviews/{id}` | Actualizar reseña | Autenticado |
+| `DELETE` | `/api/reviews/{id}` | Eliminar reseña | Autenticado |
+
+### Horarios / Clases Privadas (`/api/schedules`)
+
+| Método | Ruta | Descripción | Acceso |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/schedules/available/{expertId}` | Horarios disponibles de un experto | Público |
+| `GET` | `/api/schedules/student/{studentId}` | Clases del estudiante | Autenticado |
+| `POST` | `/api/schedules/student/{studentId}` | Agendar clase | Autenticado |
+| `PUT` | `/api/schedules/{scheduleId}/student/{studentId}` | Modificar clase | Autenticado |
+| `DELETE` | `/api/schedules/{scheduleId}/student/{studentId}` | Cancelar clase | Autenticado |
+
+---
+
+## 📊 Modelo de Datos
+
+```
+User ──(1:1)──> UserProfile
+User ──(M:N)──> Course        (tabla: user_courses)
+Course ──(1:N)──> Module
+Course ──(1:N)──> Review
+```
+
+---
+
+## 🧪 Reglas de Negocio
+
+- **Username único:** No se permite crear dos usuarios con el mismo `username`.
+- **Publicación de cursos:** Un curso no puede publicarse (`isPublished=true`) si no tiene al menos un módulo.
+- **Control de roles:** Solo usuarios con rol `ADMIN` pueden crear, editar y eliminar cursos y módulos.
+- **Inscripción:** Un usuario no puede inscribirse dos veces al mismo curso.
 
 ---
 
@@ -75,82 +161,6 @@
 | Roque Aldana | Backend / DB Specialist | [@Julio28012020](https://github.com/Julio28012020) |
 | Julio Correa | QA / Tester | [@Jcorrea24](https://github.com/Jcorrea24) |
 | Sergio Montoya | UI/UX Designer | [@SerelbochaD3773](https://github.com/SerelbochaD3773) |
-
----
-
-## 📊 Diagrama de Clases del Dominio (v1)
-
-![Diagrama de Clases del Dominio](docs/diagrama-grupo1-v1.png)
-
-*Diagrama que contempla las entidades: Usuario, Reseña, Desafío y Progreso Académico. Los IDs utilizan `@GeneratedValue` y las entidades clave incluyen atributos de auditoría `createdAt`/`updatedAt`.*
-
----
-
-## 🚀 Instrucciones de Instalación y Ejecución
-
-### 1. Clonar el repositorio
-
-```bash
-git clone https://github.com/MarioMunera1993/vulcano-api-grupo-1.git
-```
-
-### 2. Entrar al directorio
-
-```bash
-cd vulcano-api-grupo-1
-```
-
-### 3. Configurar perfiles de Spring Boot
-
-El proyecto utiliza perfiles de Spring Boot para alternar entre entornos. Los archivos de configuración están en `src/main/resources/`.
-
-**Perfil de Desarrollo — `application-dev.properties` (H2 en memoria):**
-
-```properties
-# Perfil: dev
-spring.datasource.url=jdbc:h2:mem:vulcanodb
-spring.datasource.driver-class-name=org.h2.Driver
-spring.datasource.username=sa
-spring.datasource.password=
-spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
-spring.jpa.hibernate.ddl-auto=create-drop
-spring.h2.console.enabled=true
-spring.h2.console.path=/h2-console
-```
-
-Activa este perfil con:
-```bash
-./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
-```
-
-**Perfil de Producción — `application-prod.properties` (PostgreSQL):**
-
-> 🔒 **Importante:** Las credenciales **nunca** deben estar hardcodeadas. Usa variables de entorno y añade este archivo a `.gitignore` si contiene valores reales.
-
-```properties
-# Perfil: prod
-spring.datasource.url=jdbc:postgresql://<host>:<puerto>/<nombre_bd>?sslmode=require
-spring.datasource.driver-class-name=org.postgresql.Driver
-spring.datasource.username=${DB_USERNAME}
-spring.datasource.password=${DB_PASSWORD}
-spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
-spring.jpa.hibernate.ddl-auto=update
-```
-
-Activa este perfil con:
-```bash
-./mvnw spring-boot:run -Dspring-boot.run.profiles=prod
-```
-
-### 4. Ejecutar la aplicación
-
-Desde la terminal:
-
-```bash
-./mvnw spring-boot:run
-```
-
-O desde su IDE ejecutando: **Run → VulcanoApiApplication**.
 
 ---
 

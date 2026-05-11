@@ -38,5 +38,4 @@ public class Module extends BaseEntity {
     @JoinColumn(name = "course_id", nullable = false) 
     @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"modulos", "hibernateLazyInitializer", "handler"})
     private Course course;
-
 }

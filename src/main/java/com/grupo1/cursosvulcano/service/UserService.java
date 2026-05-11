@@ -3,9 +3,11 @@ package com.grupo1.cursosvulcano.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
+import com.grupo1.cursosvulcano.model.entity.Course;
 import com.grupo1.cursosvulcano.model.entity.User;
 import com.grupo1.cursosvulcano.model.entity.UserProfile;
 import com.grupo1.cursosvulcano.model.enums.UserRole;
+import com.grupo1.cursosvulcano.repository.CourseRepository;
 import com.grupo1.cursosvulcano.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
@@ -16,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
 
     @Transactional
     public User createUser(User user, UserProfile profile) {
@@ -117,5 +120,27 @@ public class UserService {
         user.setRole(role);
         return userRepository.save(user);
     }
+
+    /**
+     * Inscribir un usuario en un curso (relación ManyToMany).
+     * Valida que ambos existan y que el usuario no esté ya inscrito.
+     */
+    @Transactional
+    public User enrollInCourse(Long userId, Long courseId) {
+        User user = getUserById(userId);
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new RuntimeException("Curso no encontrado con ID: " + courseId));
+
+        // Verificar que no esté ya inscrito
+        boolean alreadyEnrolled = user.getCourses().stream()
+                .anyMatch(c -> c.getId().equals(courseId));
+        if (alreadyEnrolled) {
+            throw new IllegalArgumentException("El usuario ya está inscrito en este curso.");
+        }
+
+        user.getCourses().add(course);
+        return userRepository.save(user);
+    }
 }
+
 
