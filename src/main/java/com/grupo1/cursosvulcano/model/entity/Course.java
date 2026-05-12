@@ -4,11 +4,13 @@ import com.grupo1.cursosvulcano.model.enums.Status;
 import java.util.ArrayList;
 import java.util.List;
 import com.grupo1.cursosvulcano.model.enums.CourseLevel;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -47,6 +49,11 @@ public class Course extends BaseEntity {
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Module> modulos = new ArrayList<>();
+
+    // Lado inverso de la relación muchos-a-muchos con User
+    @ManyToMany(mappedBy = "courses")
+    @JsonIgnoreProperties({"courses", "password", "profile", "hibernateLazyInitializer", "handler"})
+    private List<User> users = new ArrayList<>();
 
 }
 
