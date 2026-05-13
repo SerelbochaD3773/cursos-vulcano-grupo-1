@@ -9,12 +9,14 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
+import jakarta.validation.constraints.NotNull;
 
 @Data
 public class ClassScheduleRequest {
 
     private Long studentId;
     private Long expertId;
+    @NotNull
     private Long courseId;
 
     private LocalDateTime startTime;

@@ -21,16 +21,41 @@ public class ClassScheduleService {
 
     private final ClassScheduleRepository classScheduleRepository;
 
-    public List<AvailableScheduleGroupResponse> getAvailableSchedules(Long expertId) {
-        List<ClassSchedule> schedules = classScheduleRepository.findByExpertId(expertId);
-        Map<String, List<String>> grouped = new HashMap<>();
+    // --- NUEVO: Obtener todos los horarios (para la tabla de Gestión de Clases) ---
+    public List<ClassScheduleResponse> getAllSchedules() {
+        List<ClassSchedule> schedules = classScheduleRepository.findAll();
+        return schedules.stream().map(this::mapToResponse).collect(Collectors.toList());
+    }
 
-        for (ClassSchedule schedule : schedules) {
-            if (schedule.getStartTime() == null) {
-                continue;
-            }
-            String date = schedule.getStartTime().toLocalDate().toString();
-            String time = formatTime(schedule.getStartTime().getHour(), schedule.getStartTime().getMinute());
+    // --- NUEVO: Crear disponibilidad (para el Profesor/Admin) ---
+    public ClassScheduleResponse createAvailability(ClassScheduleRequest request) {
+        ClassSchedule schedule = new ClassSchedule();
+
+        schedule.setStudentId(null);
+        schedule.setExpertId(request.getExpertId());
+        schedule.setCourseId(request.getCourseId());
+        schedule.setStartTime(request.getStartTime());
+        schedule.setNotes(request.getNotes() != null ? request.getNotes() : "Disponible");
+        schedule.setStatus("AVAILABLE");
+
+        ClassSchedule saved = classScheduleRepository.save(schedule);
+        return mapToResponse(saved);
+    }
+
+    // --- EXISTENTE: Obtener horarios disponibles (actualmente con datos fijos) ---
+    public List<AvailableScheduleGroupResponse> getAvailableSchedules(Long expertId) {
+        // Consultamos la base de datos real filtrando por experto y estado AVAILABLE
+        List<ClassSchedule> availableSchedules = classScheduleRepository.findByExpertIdAndStatus(expertId, "AVAILABLE");
+
+        Map<String, List<String>> grouped = new HashMap<>();
+        for (ClassSchedule schedule : availableSchedules) {
+            LocalDateTime dateTime = schedule.getStartTime();
+            if (dateTime == null) continue;
+            
+            String date = dateTime.toLocalDate().toString();
+            // Usamos formato 24h (HH:mm) para que el frontend pueda agendar correctamente
+            String time = String.format("%02d:%02d", dateTime.getHour(), dateTime.getMinute());
+            
             grouped.computeIfAbsent(date, k -> new ArrayList<>()).add(time);
         }
 
@@ -45,10 +70,7 @@ public class ClassScheduleService {
     }
 
     private String formatTime(int hour, int minute) {
-        String ampm = hour >= 12 ? "PM" : "AM";
-        int displayHour = hour % 12;
-        if (displayHour == 0) displayHour = 12;
-        return String.format("%02d:%02d %s", displayHour, minute, ampm);
+        return String.format("%02d:%02d", hour, minute);
     }
 
     public List<ClassScheduleResponse> getStudentSchedules(Long studentId) {
@@ -84,6 +106,14 @@ public class ClassScheduleService {
         return scheduleClass(request);
     }
 
+    public ClassScheduleResponse updateStatus(Long scheduleId, String status) {
+        ClassSchedule schedule = classScheduleRepository.findById(scheduleId)
+            .orElseThrow(() -> new RuntimeException("Schedule not found"));
+        schedule.setStatus(status);
+        ClassSchedule saved = classScheduleRepository.save(schedule);
+        return mapToResponse(saved);
+    }
+
     public ClassScheduleResponse modifySchedule(Long scheduleId, Long studentId, ClassScheduleRequest request) {
         ClassSchedule schedule = classScheduleRepository.findById(scheduleId)
             .orElseThrow(() -> new RuntimeException("Schedule not found"));
@@ -99,15 +129,7 @@ public class ClassScheduleService {
         return mapToResponse(saved);
     }
 
-    public ClassScheduleResponse updateStatus(Long scheduleId, String status) {
-        ClassSchedule schedule = classScheduleRepository.findById(scheduleId)
-            .orElseThrow(() -> new RuntimeException("Schedule not found"));
-        schedule.setStatus(status);
-        ClassSchedule saved = classScheduleRepository.save(schedule);
-        return mapToResponse(saved);
-    }
-
-    public void deleteSchedule(Long scheduleId) {
+    public void deleteAvailability(Long scheduleId) {
         ClassSchedule schedule = classScheduleRepository.findById(scheduleId)
             .orElseThrow(() -> new RuntimeException("Schedule not found"));
         classScheduleRepository.delete(schedule);

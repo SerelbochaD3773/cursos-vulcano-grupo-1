@@ -11,4 +11,5 @@ public interface ClassScheduleRepository extends JpaRepository<ClassSchedule, Lo
 
     List<ClassSchedule> findByStudentId(Long studentId);
     List<ClassSchedule> findByExpertId(Long expertId);
+    List<ClassSchedule> findByExpertIdAndStatus(Long expertId, String status);
 }

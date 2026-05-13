@@ -4,119 +4,88 @@ import com.grupo1.cursosvulcano.dto.request.ClassScheduleRequest;
 import com.grupo1.cursosvulcano.dto.response.AvailableScheduleGroupResponse;
 import com.grupo1.cursosvulcano.dto.response.ClassScheduleResponse;
 import com.grupo1.cursosvulcano.service.ClassScheduleService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
- 
+
 @RestController
 @RequestMapping("/api/schedules")
+@CrossOrigin("*") // IMPORTANTE: Permite que el frontend React se conecte
 @RequiredArgsConstructor
 public class ClassScheduleController {
 
     private final ClassScheduleService classScheduleService;
- 
-    /**
-     * GET /api/schedules/available/{expertId}
-     * Retorna los horarios disponibles de un experto para los próximos 7 días.
-     */
-    @GetMapping("/available/{expertId}")
-    public ResponseEntity<List<AvailableScheduleGroupResponse>> getAvailableSchedules(
-            @PathVariable Long expertId) {
- 
-        List<AvailableScheduleGroupResponse> available = classScheduleService.getAvailableSchedules(expertId);
-        return ResponseEntity.ok(available);
-    }
- 
-    /**
-     * GET /api/schedules
-     * Retorna todas las clases guardadas en el sistema.
-     */
+
+    // --- NUEVO: Obtener TODAS las clases (soluciona el 404 al cargar ClassManagement)
     @GetMapping
     public ResponseEntity<List<ClassScheduleResponse>> getAllSchedules() {
-        List<ClassScheduleResponse> schedules = classScheduleService.getAllSchedules();
-        return ResponseEntity.ok(schedules);
+        return ResponseEntity.ok(classScheduleService.getAllSchedules());
     }
 
+    // --- NUEVO: Crear disponibilidad (soluciona el error al guardar la nueva clase)
+    @PostMapping
+    public ResponseEntity<ClassScheduleResponse> createAvailability(@RequestBody ClassScheduleRequest request) {
+        return ResponseEntity.ok(classScheduleService.createAvailability(request));
+    }
+
+    // --- NUEVO: Cambiar el estado (publicar/despublicar) de un horario sin validar studentId
+    @PatchMapping("/{scheduleId}/status")
+    public ResponseEntity<ClassScheduleResponse> updateStatus(
+            @PathVariable Long scheduleId,
+            @RequestParam String status) {
+        return ResponseEntity.ok(classScheduleService.updateStatus(scheduleId, status));
+    }
+
+    // --- EXISTENTES ---
+
+    // Obtener horarios disponibles de un profesor
+    @GetMapping("/available/{expertId}")
+    public ResponseEntity<List<AvailableScheduleGroupResponse>> getAvailableSchedules(@PathVariable Long expertId) {
+        return ResponseEntity.ok(classScheduleService.getAvailableSchedules(expertId));
+    }
+    // Obtener horarios agendados de un estudiante
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<ClassScheduleResponse>> getStudentSchedules(
-            @PathVariable Long studentId) {
- 
-        List<ClassScheduleResponse> schedules = classScheduleService.getStudentSchedules(studentId);
-        return ResponseEntity.ok(schedules);
+    public ResponseEntity<List<ClassScheduleResponse>> getStudentSchedules(@PathVariable Long studentId) {
+        return ResponseEntity.ok(classScheduleService.getStudentSchedules(studentId));
     }
 
     @GetMapping("/expert/{expertId}")
-    public ResponseEntity<List<ClassScheduleResponse>> getExpertSchedules(
-            @PathVariable Long expertId) {
- 
-        List<ClassScheduleResponse> schedules = classScheduleService.getExpertSchedules(expertId);
-        return ResponseEntity.ok(schedules);
+    public ResponseEntity<List<ClassScheduleResponse>> getExpertSchedules(@PathVariable Long expertId) {
+        return ResponseEntity.ok(classScheduleService.getExpertSchedules(expertId));
     }
- 
-    /**
-     * POST /api/schedules/student/{studentId}
-     * Agenda una nueva clase privada.
-     */
+
+    // El alumno agenda una clase
     @PostMapping("/student/{studentId}")
     public ResponseEntity<ClassScheduleResponse> scheduleClass(
             @PathVariable Long studentId,
-            @Valid @RequestBody ClassScheduleRequest request) {
- 
-        ClassScheduleResponse response = classScheduleService.scheduleClass(studentId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            @RequestBody ClassScheduleRequest request) {
+        return ResponseEntity.ok(classScheduleService.scheduleClass(studentId, request));
     }
 
-    @PostMapping
-    public ResponseEntity<ClassScheduleResponse> createSchedule(
-            @Valid @RequestBody ClassScheduleRequest request) {
- 
-        ClassScheduleResponse response = classScheduleService.scheduleClass(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<ClassScheduleResponse> updateScheduleStatus(
-            @PathVariable Long id,
-            @Valid @RequestBody ClassScheduleRequest request) {
- 
-        ClassScheduleResponse response = classScheduleService.updateStatus(id, request.getStatus());
-        return ResponseEntity.ok(response);
-    }
-
-    /**
-     * PUT /api/schedules/{scheduleId}/student/{studentId}
-     * Modifica una clase ya agendada.
-     */
+    // Modificar una clase agendada
     @PutMapping("/{scheduleId}/student/{studentId}")
     public ResponseEntity<ClassScheduleResponse> modifySchedule(
             @PathVariable Long scheduleId,
             @PathVariable Long studentId,
-            @Valid @RequestBody ClassScheduleRequest request) {
- 
-        ClassScheduleResponse response = classScheduleService.modifySchedule(scheduleId, studentId, request);
-        return ResponseEntity.ok(response);
-    }
- 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long id) {
-        classScheduleService.deleteSchedule(id);
-        return ResponseEntity.noContent().build();
+            @RequestBody ClassScheduleRequest request) {
+        return ResponseEntity.ok(classScheduleService.modifySchedule(scheduleId, studentId, request));
     }
 
-    /**
-     * DELETE /api/schedules/{scheduleId}/student/{studentId}
-     * Cancela una clase agendada.
-     */
+    // Cancelar/Eliminar una clase agendada (requiere studentId - para alumnos)
     @DeleteMapping("/{scheduleId}/student/{studentId}")
     public ResponseEntity<Void> cancelSchedule(
             @PathVariable Long scheduleId,
             @PathVariable Long studentId) {
- 
         classScheduleService.cancelSchedule(scheduleId, studentId);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Eliminar disponibilidad (admin, sin validar studentId)
+    @DeleteMapping("/{scheduleId}")
+    public ResponseEntity<Void> deleteAvailability(@PathVariable Long scheduleId) {
+        classScheduleService.deleteAvailability(scheduleId);
         return ResponseEntity.noContent().build();
     }
 }

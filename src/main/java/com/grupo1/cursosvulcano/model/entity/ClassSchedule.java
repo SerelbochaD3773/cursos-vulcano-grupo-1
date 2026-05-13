@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 @Table(name = "class_schedules")
 public class ClassSchedule extends BaseEntity {
 
-    @Column
+    @Column(name = "student_id", nullable = true)
     private Long studentId;
 
-    @Column
+    @Column(name = "expert_id", nullable = true)
     private Long expertId;
 
-    @Column
+    @Column(name = "course_id", nullable = false)
     private Long courseId;
 
     @Column(nullable = false)
