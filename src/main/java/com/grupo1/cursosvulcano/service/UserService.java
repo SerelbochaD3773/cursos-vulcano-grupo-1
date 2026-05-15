@@ -9,16 +9,18 @@ import com.grupo1.cursosvulcano.model.entity.UserProfile;
 import com.grupo1.cursosvulcano.model.enums.UserRole;
 import com.grupo1.cursosvulcano.repository.CourseRepository;
 import com.grupo1.cursosvulcano.repository.UserRepository;
+import com.grupo1.cursosvulcano.repository.UserProfileRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor // Genera el constructor para la inyección de dependencias
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
+    private final UserProfileRepository userProfileRepository;
 
     @Transactional
     public User createUser(User user, UserProfile profile) {
@@ -28,6 +30,11 @@ public class UserService {
 
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new IllegalArgumentException("El username ya está en uso");
+        }
+
+        if (profile != null && profile.getEmail() != null
+                && userProfileRepository.existsByEmail(profile.getEmail())) {
+            throw new IllegalArgumentException("El email ya está registrado: " + profile.getEmail());
         }
 
         // Usamos el método helper que creamos para vincular ambos objetos en memoria
