@@ -42,8 +42,8 @@ README.md
 # --- Archivos de test (no necesarios en la imagen) ---
 src/test/
 
-# --- Maven wrapper jar (se usa el script, no el jar) ---
-.mvn/wrapper/maven-wrapper.jar
+# --- Maven wrapper jar (necesario para ./mvnw en el contenedor) ---
+# .mvn/wrapper/maven-wrapper.jar  ← removido, es requerido por el build
 
 # --- Carpetas de build de otros módulos/IDE ---
 build/
