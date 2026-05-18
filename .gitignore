@@ -35,3 +35,6 @@ build/
 ### Agent Instructions ###
 AGENTS.md
 .env
+
+### Local config (credentials) ###
+src/main/resources/application-local.properties

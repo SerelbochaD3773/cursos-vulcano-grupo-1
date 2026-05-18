@@ -6,5 +6,6 @@ package com.grupo1.cursosvulcano.model.enums;
  */
 public enum UserRole {
     ADMIN,
-    USER
+    USER,
+    TEACHER
 }

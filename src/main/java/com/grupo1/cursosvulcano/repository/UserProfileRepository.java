@@ -8,5 +8,7 @@ import com.grupo1.cursosvulcano.model.entity.UserProfile;
 @Repository
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
 
+    boolean existsByEmail(String email);
+
 }
 

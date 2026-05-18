@@ -1,0 +1,53 @@
+# ============================================================
+# .dockerignore — cursos-vulcano-grupo-1
+# Evita enviar archivos innecesarios al demonio de Docker.
+# Reduce el tamaño del contexto de build y acelera el proceso.
+# ============================================================
+
+# --- Compilados de Maven (se generan dentro del contenedor) ---
+target/
+
+# --- Control de versiones ---
+.git/
+.gitignore
+.gitattributes
+
+# --- IDE y editores ---
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.classpath
+.project
+.settings/
+*.factorypath
+
+# --- Spring Boot DevTools / configuración local ---
+.env
+src/main/resources/application-local.properties
+
+# --- Archivos del sistema operativo ---
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+
+# --- Documentación y archivos de proyecto ---
+HELP.md
+AGENTS.md
+README.md
+*.md
+
+# --- Archivos de test (no necesarios en la imagen) ---
+src/test/
+
+# --- Maven wrapper jar (necesario para ./mvnw en el contenedor) ---
+# .mvn/wrapper/maven-wrapper.jar  ← removido, es requerido por el build
+
+# --- Carpetas de build de otros módulos/IDE ---
+build/
+nbproject/
+dist/
+nbdist/
+.nb-gradle/

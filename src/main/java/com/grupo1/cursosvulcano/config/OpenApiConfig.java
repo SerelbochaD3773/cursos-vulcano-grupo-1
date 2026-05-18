@@ -11,14 +11,14 @@ import org.springframework.context.annotation.Configuration;
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI adopcionOpenAPI() {
+    public OpenAPI vulcanoOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("API de Adopción de Mascotas")
+                        .title("API Vúlcano")
                         .description("""
-                                Backend para un sistema simple de adopción de mascotas.
+                                Backend para un sistema de refuerzo educativo en programación.
                                 
-                                Permite administrar **Adoptantes**, **Mascotas** y **Solicitudes** con:
+                                Permite administrar **Cursos**, **Modulos**, **Usuarios**, **Agendas de Clases** y **Opiniones** con:
                                 - Herencia JPA (`@MappedSuperclass`)
                                 - Enumeraciones (`@Enumerated`)
                                 - Auditoría automática (`@CreatedDate` / `@LastModifiedDate`)
@@ -26,7 +26,7 @@ public class OpenApiConfig {
                         .version("1.0.0")
                         .contact(new Contact()
                                 .name("Equipo de Desarrollo")
-                                .email("dev@adopcion.com"))
+                                .email("dev@vulcano.com"))
                         .license(new License()
                                 .name("MIT License")
                                 .url("https://opensource.org/licenses/MIT")));
