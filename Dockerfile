@@ -13,6 +13,7 @@ COPY .mvn/ .mvn/
 COPY mvnw pom.xml ./
 
 # Descargamos dependencias en modo offline (sin compilar el código todavía)
+RUN chmod +x ./mvnw
 RUN ./mvnw dependency:go-offline -B
 
 # Ahora copiamos el código fuente

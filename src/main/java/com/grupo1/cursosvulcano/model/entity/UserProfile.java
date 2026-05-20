@@ -25,6 +25,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserProfile extends BaseEntity {
 
+    @Column(name = "registration_code", length = 30, unique = true)
+    private String registrationCode;
+
     @Column(length = 50, nullable = false)
     private String firstName;
 
