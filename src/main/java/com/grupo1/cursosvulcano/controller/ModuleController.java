@@ -2,6 +2,8 @@ package com.grupo1.cursosvulcano.controller;
 
 import java.util.List;
 import java.util.Map;
+import com.grupo1.cursosvulcano.dto.request.ModuleRequest;
+import com.grupo1.cursosvulcano.model.embeddable.Content;
 import com.grupo1.cursosvulcano.model.entity.Module;
 import com.grupo1.cursosvulcano.service.ModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +42,27 @@ public class ModuleController {
         return moduleService.getModulesByCourseId(courseId);
     }
 
-    @PostMapping("/course/{courseId}")
+    @PostMapping("")
     public ResponseEntity<?> createModule(
-            @PathVariable Long courseId,
-            @RequestBody Module module,
+            @RequestBody ModuleRequest moduleRequest,
             @RequestHeader(value = "X-User-Id", required = false) Long userId) {
         try {
-            Module created = moduleService.createModule(module, courseId, userId);
+            // Convert ModuleRequest to Module entity
+            Content content = new Content();
+            content.setName(moduleRequest.getName());
+            content.setDescription(moduleRequest.getDescription());
+            
+            Module module = new Module();
+            module.setContent(content);
+            module.setVideoUrl(moduleRequest.getVideoUrl());
+            module.setDurationInMinutes(moduleRequest.getDurationInMinutes());
+            module.setMarkdownUrl(moduleRequest.getMarkdownUrl());
+            module.setInteractiveGameUrl(moduleRequest.getInteractiveGameUrl());
+            module.setOrderIndex(moduleRequest.getOrderIndex());
+            module.setStatus(moduleRequest.getStatus());
+            // Note: course will be set by service using courseId from request
+            
+            Module created = moduleService.createModule(module, moduleRequest.getCourseId(), userId);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
         } catch (SecurityException ex) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", ex.getMessage()));
