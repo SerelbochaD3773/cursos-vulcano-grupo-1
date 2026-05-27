@@ -20,7 +20,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/courses")
-@CrossOrigin("vulcano-app-v2.vercel.app")
+@CrossOrigin("http://vulcano-app-v2.vercel.app")
 public class CourseController {
 
     @Autowired
