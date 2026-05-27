@@ -19,8 +19,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Comprueba si ya existe un username
     boolean existsByUsername(String username);
 
-    @Query("SELECT MAX(u.profile.registrationCode) FROM User u WHERE u.role = :role")
-    String findMaxRegistrationCodeByRole(@Param("role") UserRole role);
+    @Query("SELECT MAX(u.profile.registrationCode) FROM User u WHERE u.profile.registrationCode LIKE :prefixPattern")
+    String findMaxRegistrationCodeByPrefix(@Param("prefixPattern") String prefixPattern);
 
     // Permite buscar un usuario por su código de registro en el perfil
     Optional<User> findByProfileRegistrationCode(String registrationCode);
