@@ -34,4 +34,5 @@ build/
 
 ### Agent Instructions ###
 AGENTS.md
+.agent/
 .env

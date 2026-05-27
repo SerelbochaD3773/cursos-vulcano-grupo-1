@@ -73,6 +73,12 @@
 			<version>3.0.0</version>
 		</dependency>
 
+		<!-- Security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
 		<!-- OpenAPI 3 / Swagger UI -->
 		<dependency>
 			<groupId>org.springdoc</groupId>

@@ -27,7 +27,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class User extends BaseEntity {
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String username;
 
     private String password;
