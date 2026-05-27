@@ -67,7 +67,7 @@ public class UserService {
      */
     private String generateRegistrationCode(UserRole role) {
         String prefix = (role == UserRole.TEACHER) ? "DOC-" : "EST-";
-        String maxCode = userRepository.findMaxRegistrationCodeByRole(role);
+        String maxCode = userRepository.findMaxRegistrationCodeByPrefix(prefix + "%");
         int nextNum = 1;
         if (maxCode != null && maxCode.startsWith(prefix)) {
             try {
