@@ -37,16 +37,47 @@ public class UserService {
             throw new IllegalArgumentException("El email ya está registrado: " + profile.getEmail());
         }
 
-        // Usamos el método helper que creamos para vincular ambos objetos en memoria
-        user.setProfile(profile);
-        
         // REGLA DE NEGOCIO: mario_munera es siempre ADMINISTRADOR
         if ("mario_munera".equalsIgnoreCase(user.getUsername())) {
             user.setRole(UserRole.ADMIN);
         }
+
+        if (profile == null) {
+            profile = new UserProfile();
+            profile.setFirstName("Usuario");
+            profile.setLastName("Nuevo");
+            profile.setEmail(user.getUsername() + "@vulcano.com");
+        }
+
+        // Generamos el código de registro basado en el rol asignado
+        String regCode = generateRegistrationCode(user.getRole());
+        profile.setRegistrationCode(regCode);
+
+        // Usamos el método helper que creamos para vincular ambos objetos en memoria
+        user.setProfile(profile);
         
         // Al guardar el usuario, se guarda el perfil automáticamente por el cascade
         return userRepository.save(user);
+    }
+
+    /**
+     * Genera un código de registro secuencial e independiente basado en el rol.
+     * Docentes: DOC-001, DOC-002, etc.
+     * Alumnos/Admin: EST-001, EST-002, etc.
+     */
+    private String generateRegistrationCode(UserRole role) {
+        String prefix = (role == UserRole.TEACHER) ? "DOC-" : "EST-";
+        String maxCode = userRepository.findMaxRegistrationCodeByRole(role);
+        int nextNum = 1;
+        if (maxCode != null && maxCode.startsWith(prefix)) {
+            try {
+                String numPart = maxCode.substring(prefix.length());
+                nextNum = Integer.parseInt(numPart) + 1;
+            } catch (NumberFormatException e) {
+                // Fallback en caso de formato no estándar
+            }
+        }
+        return String.format("%s%03d", prefix, nextNum);
     }
 
     /**
@@ -147,6 +178,35 @@ public class UserService {
 
         user.getCourses().add(course);
         return userRepository.save(user);
+    }
+
+    /**
+     * TAREA DE MIGRACIÓN AUTOMÁTICA (ARRAQUE):
+     * Al iniciar el servidor, este listener detecta si hay usuarios existentes 
+     * que tengan el código de registro en NULL y les genera y asigna su código 
+     * secuencial correspondiente de forma automática.
+     * 
+     * Nota de rendimiento: usa saveAndFlush para escribir en base de datos al instante, 
+     * asegurando que la siguiente consulta de la secuencia lea el valor correcto.
+     */
+    @org.springframework.context.event.EventListener(org.springframework.boot.context.event.ApplicationReadyEvent.class)
+    @Transactional
+    public void backfillMissingRegistrationCodes() {
+        List<User> usersWithoutCode = userRepository.findAll().stream()
+            .filter(u -> u.getProfile() != null && u.getProfile().getRegistrationCode() == null)
+            .sorted(java.util.Comparator.comparing(User::getId)) // Asigna en el orden en que se crearon originalmente
+            .toList();
+
+        if (!usersWithoutCode.isEmpty()) {
+            System.out.println("🌋 [MIGRACIÓN DE VULCANO] Asignando códigos de registro faltantes a " + usersWithoutCode.size() + " usuarios...");
+            for (User u : usersWithoutCode) {
+                String regCode = generateRegistrationCode(u.getRole());
+                u.getProfile().setRegistrationCode(regCode);
+                userRepository.saveAndFlush(u); // Flush inmediato para actualizar la consulta MAX en la siguiente iteración
+                System.out.println("   -> Asignado código " + regCode + " al usuario @" + u.getUsername());
+            }
+            System.out.println("🌋 [MIGRACIÓN DE VULCANO] ¡Códigos de registro completados con éxito!");
+        }
     }
 }
 

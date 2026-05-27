@@ -1,0 +1,20 @@
+# ============================================================
+# Render Blueprint Specification — render.yaml
+# Permite implementar la infraestructura de forma automatizada en Render.
+# ============================================================
+services:
+  - type: web
+    name: cursosvulcano-backend
+    runtime: docker
+    plan: free # Usa la capa gratuita de Render (se puede cambiar a "starter", etc.)
+    envVars:
+      # Render pedirá estos valores en el panel web al importar el Blueprint
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      # Configuración de puerto por defecto
+      - key: PORT
+        value: 8080
