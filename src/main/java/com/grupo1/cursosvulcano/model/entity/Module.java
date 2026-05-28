@@ -34,8 +34,13 @@ public class Module extends BaseEntity {
      @Column(length = 30)
      private Status status;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false) 
-    @com.fasterxml.jackson.annotation.JsonIgnoreProperties({"modulos", "hibernateLazyInitializer", "handler"})
     private Course course;
+
+    @com.fasterxml.jackson.annotation.JsonProperty("courseId")
+    public Long getCourseId() {
+        return course != null ? course.getId() : null;
+    }
 }
