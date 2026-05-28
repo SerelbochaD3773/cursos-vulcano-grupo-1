@@ -25,9 +25,12 @@ import lombok.Setter;
 public class Module extends BaseEntity {
      @Embedded
      private Content content; 
+     @jakarta.persistence.Column(columnDefinition = "TEXT")
      private String videoUrl;
      private Integer durationInMinutes;
+     @jakarta.persistence.Column(columnDefinition = "TEXT")
      private String  markdownUrl; 
+     @jakarta.persistence.Column(columnDefinition = "TEXT")
      private String interactiveGameUrl;
      private Integer orderIndex;
      @Enumerated (EnumType.STRING)

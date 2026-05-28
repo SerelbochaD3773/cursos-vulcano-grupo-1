@@ -90,5 +90,23 @@ public class ModuleService {
         return response;
     }
 
+    @jakarta.persistence.PersistenceContext
+    private jakarta.persistence.EntityManager entityManager;
+
+    @org.springframework.context.event.EventListener(org.springframework.boot.context.event.ApplicationReadyEvent.class)
+    @jakarta.transaction.Transactional
+    public void migrateDatabaseColumns() {
+        try {
+            System.out.println("🌋 [MIGRACIÓN DE VULCANO] Alterando columnas de la tabla modules a tipo TEXT...");
+            entityManager.createNativeQuery("ALTER TABLE modules ALTER COLUMN description TYPE TEXT").executeUpdate();
+            entityManager.createNativeQuery("ALTER TABLE modules ALTER COLUMN video_url TYPE TEXT").executeUpdate();
+            entityManager.createNativeQuery("ALTER TABLE modules ALTER COLUMN markdown_url TYPE TEXT").executeUpdate();
+            entityManager.createNativeQuery("ALTER TABLE modules ALTER COLUMN interactive_game_url TYPE TEXT").executeUpdate();
+            System.out.println("🌋 [MIGRACIÓN DE VULCANO] ¡Columnas de modules alteradas con éxito!");
+        } catch (Exception e) {
+            System.err.println("🌋 [MIGRACIÓN DE VULCANO] Advertencia al alterar columnas: " + e.getMessage());
+        }
+    }
+
 }
 
