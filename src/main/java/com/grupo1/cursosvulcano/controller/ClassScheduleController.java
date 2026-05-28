@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/schedules")
-@CrossOrigin("*") // IMPORTANTE: Permite que el frontend React se conecte
 @RequiredArgsConstructor
 public class ClassScheduleController {
 
