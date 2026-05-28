@@ -9,5 +9,7 @@ import lombok.Setter;
 @Setter
 public class Content {
     private String name;
+
+    @jakarta.persistence.Column(columnDefinition = "TEXT")
     private String description;
 }
